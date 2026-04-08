@@ -74,14 +74,13 @@
     <!-- DASHBOARD PIVOT VIEW -->
     <record id="view_account_overdue_pivot" model="ir.ui.view">
         <field name="name">account.overdue.pivot</field>
-        <field name="model">account.overdue</field>
+        <field name="model">account.move</field>
         <field name="arch" type="xml">
             <pivot string="Overdue Dashboard">
                 <field name="partner_id" type="row"/>
                 <field name="move_type" type="col"/>
-                <field name="debit" type="measure"/>
-                <field name="credit" type="measure"/>
-                <field name="days_overdue" type="measure"/>
+                <field name="amount_residual_signed" type="measure"/>
+                <field name="amount_total_signed" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -89,12 +88,11 @@
     <!-- DASHBOARD GRAPH VIEW -->
     <record id="view_account_overdue_graph" model="ir.ui.view">
         <field name="name">account.overdue.graph</field>
-        <field name="model">account.overdue</field>
+        <field name="model">account.move</field>
         <field name="arch" type="xml">
             <graph string="Overdue Dashboard" type="bar">
                 <field name="partner_id"/>
-                <field name="debit" type="measure"/>
-                <field name="credit" type="measure"/>
+                <field name="amount_residual_signed" type="measure"/>
             </graph>
         </field>
     </record>
@@ -102,8 +100,14 @@
     <!-- DASHBOARD ACTION -->
     <record id="action_overdue_dashboard" model="ir.actions.act_window">
         <field name="name">Dashboard</field>
-        <field name="res_model">account.overdue</field>
+        <field name="res_model">account.move</field>
         <field name="view_mode">graph,pivot,list,form</field>
+        <field name="domain">[
+            ('move_type', 'in', ['out_invoice', 'in_invoice']),
+            ('state', '=', 'posted'),
+            ('invoice_date_due', '&lt;', context_today()),
+            ('payment_state', '!=', 'paid')
+        ]</field>
         <field name="context">{'search_default_group_partner_id': 1}</field>
     </record>
     <!-- CUSTOMER ACTION -->
