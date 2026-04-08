@@ -70,6 +70,42 @@
         </field>
     </record>
 
+
+    <!-- DASHBOARD PIVOT VIEW -->
+    <record id="view_account_overdue_pivot" model="ir.ui.view">
+        <field name="name">account.overdue.pivot</field>
+        <field name="model">account.overdue</field>
+        <field name="arch" type="xml">
+            <pivot string="Overdue Dashboard">
+                <field name="partner_id" type="row"/>
+                <field name="move_type" type="col"/>
+                <field name="debit" type="measure"/>
+                <field name="credit" type="measure"/>
+                <field name="days_overdue" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- DASHBOARD GRAPH VIEW -->
+    <record id="view_account_overdue_graph" model="ir.ui.view">
+        <field name="name">account.overdue.graph</field>
+        <field name="model">account.overdue</field>
+        <field name="arch" type="xml">
+            <graph string="Overdue Dashboard" type="bar">
+                <field name="partner_id"/>
+                <field name="debit" type="measure"/>
+                <field name="credit" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- DASHBOARD ACTION -->
+    <record id="action_overdue_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">account.overdue</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="context">{'search_default_group_partner_id': 1}</field>
+    </record>
     <!-- CUSTOMER ACTION -->
     <record id="action_customer_overdue" model="ir.actions.act_window">
         <field name="name">Customer Entries</field>
@@ -91,19 +127,27 @@
               name="Due Payment Monitor"
               sequence="10"/>
 
+
+    <!-- DASHBOARD PAGE -->
+    <menuitem id="menu_overdue_dashboard"
+              name="Dashboard"
+              parent="menu_account_overdue_root"
+              action="action_overdue_dashboard"
+              sequence="1"/>
+
     <!-- CUSTOMER PAGE -->
     <menuitem id="menu_customer_overdue_entries"
               name="Customer Entries"
               parent="menu_account_overdue_root"
               action="action_customer_overdue"
-              sequence="1"/>
+              sequence="2"/>
 
     <!-- VENDOR PAGE -->
     <menuitem id="menu_vendor_overdue_entries"
               name="Vendor Entries"
               parent="menu_account_overdue_root"
               action="action_vendor_overdue"
-              sequence="2"/>
+              sequence="3"/>
 </odoo>
 
 
@@ -185,13 +229,13 @@
               name="Customer Entries"
               parent="menu_account_overdue_root"
               action="action_customer_overdue"
-              sequence="1"/>
+              sequence="2"/>
 
     VENDOR PAGE
     <menuitem id="menu_vendor_overdue_entries"
               name="Vendor Entries"
               parent="menu_account_overdue_root"
               action="action_vendor_overdue"
-              sequence="2"/>
+              sequence="3"/>
 
 </odoo> -->
