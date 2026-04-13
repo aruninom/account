@@ -12,6 +12,7 @@ class TrainingCatalogController(http.Controller):
         scheduled = kwargs.get("scheduled")
         published = kwargs.get("published")
 
+        is_public_user = request.env.user._is_public()
         base_domain = [("show_in_portfolio", "=", True)]
 
         if view_mode == "upcoming":
@@ -32,7 +33,9 @@ class TrainingCatalogController(http.Controller):
         if scheduled in ("scheduled", "unscheduled"):
             base_domain.append(("schedule_state", "=", scheduled))
 
-        if published in ("published", "unpublished"):
+        if is_public_user:
+            base_domain.append(("website_published", "=", True))
+        elif published in ("published", "unpublished"):
             base_domain.append(("visibility_state", "=", published))
 
         if query:

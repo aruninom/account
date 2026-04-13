@@ -75,7 +75,9 @@ class EventEvent(models.Model):
         want_unscheduled = value == "unscheduled"
         if operator == "!=":
             want_unscheduled = not want_unscheduled
-        return [("is_unscheduled_course", "=", want_unscheduled)]
+        if want_unscheduled:
+            return ["|", ("is_unscheduled_course", "=", True), ("date_begin", "=", False)]
+        return [("is_unscheduled_course", "=", False), ("date_begin", "!=", False)]
 
     def website_can_see_restricted_fields(self):
         self.ensure_one()
