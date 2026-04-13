@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="training_catalog_page" name="Training Catalog">
+        <t t-call="website.layout">
+            <div class="container my-5">
+                <h1 class="mb-3">Training Courses</h1>
+                <p class="text-muted">
+                    Browse upcoming events and the full portfolio of courses.
+                </p>
+
+                <div class="btn-group mb-4" role="group">
+                    <a t-attf-class="btn #{'btn-primary' if view_mode == 'upcoming' else 'btn-outline-primary'}" t-attf-href="/training/upcoming?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;scheduled=#{scheduled or ''}&amp;published=#{published or ''}">Upcoming events</a>
+                    <a t-attf-class="btn #{'btn-primary' if view_mode == 'portfolio' else 'btn-outline-primary'}" t-attf-href="/training/portfolio?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;scheduled=#{scheduled or ''}&amp;published=#{published or ''}">Course portfolio</a>
+                </div>
+
+                <form method="get" class="row g-2 mb-4">
+                    <div class="col-md-3">
+                        <input type="text" name="q" class="form-control" placeholder="Search courses" t-att-value="q or ''"/>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="provider_type" class="form-select">
+                            <option value="">All providers</option>
+                            <option value="aha" t-att-selected="provider_type == 'aha'">Aha Academy</option>
+                            <option value="iap2" t-att-selected="provider_type == 'iap2'">IAP2</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="content_type" class="form-select">
+                            <option value="">All content types</option>
+                            <option value="engagement" t-att-selected="content_type == 'engagement'">Engagement</option>
+                            <option value="conflict" t-att-selected="content_type == 'conflict'">Conflict</option>
+                            <option value="facilitation" t-att-selected="content_type == 'facilitation'">Facilitation</option>
+                            <option value="evaluation" t-att-selected="content_type == 'evaluation'">Evaluation</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="scheduled" class="form-select">
+                            <option value="">All schedule states</option>
+                            <option value="scheduled" t-att-selected="scheduled == 'scheduled'">Scheduled</option>
+                            <option value="unscheduled" t-att-selected="scheduled == 'unscheduled'">Unscheduled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="published" class="form-select">
+                            <option value="">Published + Unpublished</option>
+                            <option value="published" t-att-selected="published == 'published'">Published only</option>
+                            <option value="unpublished" t-att-selected="published == 'unpublished'">Unpublished only</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1 d-grid">
+                        <button type="submit" class="btn btn-primary">Go</button>
+                    </div>
+                </form>
+
+                <t t-if="not events">
+                    <div class="alert alert-info">No courses found for the selected filters.</div>
+                </t>
+
+                <div class="row g-3" t-if="events">
+                    <t t-foreach="events" t-as="course">
+                        <div class="col-12 col-lg-6">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title" t-esc="course.name"/>
+                                    <p class="mb-1"><strong>Provider:</strong> <span t-esc="dict(course._fields['provider_type'].selection).get(course.provider_type, '-')"/></p>
+                                    <p class="mb-1"><strong>Content type:</strong> <span t-esc="dict(course._fields['content_type'].selection).get(course.content_type, '-')"/></p>
+
+                                    <t t-if="course.schedule_state == 'scheduled'">
+                                        <p class="mb-1"><strong>Date:</strong> <span t-field="course.date_begin"/></p>
+                                    </t>
+                                    <t t-else="">
+                                        <p class="mb-1"><strong>Date:</strong> Not currently scheduled</p>
+                                    </t>
+
+                                    <t t-if="course.website_can_see_restricted_fields()">
+                                        <p class="mb-1" t-if="course.price"><strong>Price:</strong> <span t-esc="course.price"/></p>
+                                        <p class="mb-1" t-if="course.seats_available is not None"><strong>Seats available:</strong> <span t-esc="course.seats_available"/></p>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="alert alert-secondary py-2 my-2">
+                                            Some details are visible after login for IAP2 courses.
+                                        </div>
+                                    </t>
+                                </div>
+                                <div class="card-footer d-flex flex-wrap gap-2">
+                                    <a t-if="course.booking_url" t-att-href="course.booking_url" class="btn btn-sm btn-primary">Booking link</a>
+                                    <a t-if="course.more_info_url" t-att-href="course.more_info_url" class="btn btn-sm btn-outline-primary">More information</a>
+                                    <a t-if="course.website_pdf_url()" t-att-href="course.website_pdf_url()" class="btn btn-sm btn-outline-secondary">Download PDF</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="training_catalog_menu_item" inherit_id="website.main_menu" name="Training menu item">
+        <xpath expr="//ul[@id='top_menu']" position="inside">
+            <li class="nav-item">
+                <a href="/training/upcoming" class="nav-link">Training</a>
+            </li>
+        </xpath>
+    </template>
+</odoo>
