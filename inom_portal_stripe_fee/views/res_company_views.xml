@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_stripe_fee" model="ir.ui.view">
+        <field name="name">res.company.form.stripe.fee</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Stripe Surcharge">
+                    <group>
+                        <field name="stripe_card_fee_rate"/>
+                        <field name="stripe_card_fee_product_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
