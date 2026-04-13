@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_project_form_inherit_past_work_catalog" model="ir.ui.view">
+        <field name="name">project.project.form.past.work.catalog</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="after">
+                <group string="Past Work Catalog">
+                    <field name="show_in_past_work"/>
+                    <field name="past_work_sector"/>
+                    <field name="past_work_type"/>
+                    <field name="past_work_short_description"/>
+                    <field name="past_work_detailed_description" widget="html"/>
+                    <field name="past_work_pdf_attachment_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

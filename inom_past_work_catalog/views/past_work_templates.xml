@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="past_work_catalog_page" name="Past Work Catalog">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure past-work-wrap py-5">
+                <div class="container">
+                    <div class="row g-4">
+                        <aside class="col-12 col-lg-3">
+                            <div class="past-work-sidebar card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="mb-3">Filter Past Work</h5>
+
+                                    <div class="mb-4">
+                                        <h6 class="text-uppercase text-muted small mb-2">Sector</h6>
+                                        <t t-foreach="sectors" t-as="sector">
+                                            <label class="form-check mb-1">
+                                                <input class="form-check-input js-past-work-filter" type="checkbox" name="sector" t-att-value="sector"/>
+                                                <span class="form-check-label" t-esc="sector"/>
+                                            </label>
+                                        </t>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h6 class="text-uppercase text-muted small mb-2">Type of Work</h6>
+                                        <t t-foreach="work_types" t-as="work_type">
+                                            <label class="form-check mb-1">
+                                                <input class="form-check-input js-past-work-filter" type="checkbox" name="work_type" t-att-value="work_type"/>
+                                                <span class="form-check-label" t-esc="work_type"/>
+                                            </label>
+                                        </t>
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="button" class="btn btn-outline-secondary js-past-work-clear">Clear</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <section class="col-12 col-lg-9">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h1 class="h2 mb-0">Past Work</h1>
+                                <span class="badge text-bg-light"><span class="js-past-work-count" t-esc="len(records)"/> projects</span>
+                            </div>
+
+                            <t t-if="not records">
+                                <div class="alert alert-info">No projects available.</div>
+                            </t>
+
+                            <div class="past-work-grid" t-if="records">
+                                <t t-foreach="records" t-as="project">
+                                    <article
+                                        class="card past-work-card shadow-sm mb-3 js-past-work-item"
+                                        t-att-data-sector="(project.past_work_sector or '').strip()"
+                                        t-att-data-work-type="(project.past_work_type or '').strip()"
+                                    >
+                                        <div class="card-body">
+                                            <div class="row g-3 align-items-start">
+                                                <div class="col-12 col-md-4">
+                                                    <img t-if="project.image_1920" t-att-src="image_data_uri(project.image_1920)" class="img-fluid rounded" t-att-alt="project.name"/>
+                                                </div>
+                                                <div class="col-12 col-md-8">
+                                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                                        <span class="badge rounded-pill text-bg-primary" t-esc="project.past_work_sector or '-'"/>
+                                                        <span class="badge rounded-pill text-bg-secondary" t-esc="project.past_work_type or '-'"/>
+                                                    </div>
+                                                    <h2 class="h4" t-esc="project.name"/>
+                                                    <p class="text-muted mb-3" t-esc="project.past_work_short_description or ''"/>
+
+                                                    <details>
+                                                        <summary class="fw-semibold">View details</summary>
+                                                        <div class="pt-3">
+                                                            <div t-if="project.past_work_detailed_description" t-out="project.past_work_detailed_description"/>
+                                                            <a t-if="project.past_work_pdf_url()" t-att-href="project.past_work_pdf_url()" class="btn btn-outline-primary btn-sm mt-2">Download Case Study (PDF)</a>
+                                                        </div>
+                                                    </details>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </t>
+                            </div>
+                            <div class="alert alert-info d-none js-past-work-empty">No projects matched your selected filters.</div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record id="past_work_catalog_menu_item" model="website.menu">
+        <field name="name">Past Work Catalog</field>
+        <field name="url">/past-work-catalog</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" eval="81"/>
+    </record>
+</odoo>
