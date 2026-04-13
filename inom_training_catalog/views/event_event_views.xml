@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_event_form_inherit_training_catalog" model="ir.ui.view">
+        <field name="name">event.event.form.training.catalog</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[.//field[@name='date_begin']]" position="after">
+                <group string="Training Catalog">
+                    <field name="provider_type"/>
+                    <field name="content_type"/>
+                    <field name="show_in_portfolio"/>
+                    <field name="is_unscheduled_course"/>
+                    <field name="booking_url" widget="url"/>
+                    <field name="more_info_url" widget="url"/>
+                    <field name="training_pdf_attachment_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_search_inherit_training_catalog" model="ir.ui.view">
+        <field name="name">event.event.search.training.catalog</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="training_scheduled" string="Scheduled" domain="[('schedule_state','=','scheduled')]"/>
+                <filter name="training_unscheduled" string="Unscheduled" domain="[('schedule_state','=','unscheduled')]"/>
+                <filter name="training_published" string="Published" domain="[('visibility_state','=','published')]"/>
+                <filter name="training_unpublished" string="Unpublished" domain="[('visibility_state','=','unpublished')]"/>
+                <separator/>
+                <filter name="provider_aha" string="Aha Academy" domain="[('provider_type','=','aha')]"/>
+                <filter name="provider_iap2" string="IAP2" domain="[('provider_type','=','iap2')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
