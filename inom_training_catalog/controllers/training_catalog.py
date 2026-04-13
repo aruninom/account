@@ -9,8 +9,10 @@ class TrainingCatalogController(http.Controller):
         provider_type = kwargs.get("provider_type")
         content_type = kwargs.get("content_type")
         query = kwargs.get("q")
-        scheduled = kwargs.get("scheduled")
-        published = kwargs.get("published")
+        show_scheduled = kwargs.get("show_scheduled")
+        show_unscheduled = kwargs.get("show_unscheduled")
+        show_published = kwargs.get("show_published")
+        show_unpublished = kwargs.get("show_unpublished")
 
         is_public_user = request.env.user._is_public()
         base_domain = [("show_in_portfolio", "=", True)]
@@ -30,13 +32,18 @@ class TrainingCatalogController(http.Controller):
         if content_type in ("engagement", "conflict", "facilitation", "evaluation"):
             base_domain.append(("content_type", "=", content_type))
 
-        if scheduled in ("scheduled", "unscheduled"):
-            base_domain.append(("schedule_state", "=", scheduled))
+        if show_scheduled and not show_unscheduled:
+            base_domain.append(("schedule_state", "=", "scheduled"))
+        elif show_unscheduled and not show_scheduled:
+            base_domain.append(("schedule_state", "=", "unscheduled"))
 
         if is_public_user:
             base_domain.append(("website_published", "=", True))
-        elif published in ("published", "unpublished"):
-            base_domain.append(("visibility_state", "=", published))
+        else:
+            if show_published and not show_unpublished:
+                base_domain.append(("visibility_state", "=", "published"))
+            elif show_unpublished and not show_published:
+                base_domain.append(("visibility_state", "=", "unpublished"))
 
         if query:
             search_fields = [field for field in ("name", "subtitle", "description") if field in Event._fields]
@@ -62,7 +69,9 @@ class TrainingCatalogController(http.Controller):
             "provider_type": provider_type,
             "content_type": content_type,
             "q": query,
-            "scheduled": scheduled,
-            "published": published,
+            "show_scheduled": show_scheduled,
+            "show_unscheduled": show_unscheduled,
+            "show_published": show_published,
+            "show_unpublished": show_unpublished,
         }
         return request.render("inom_training_catalog.training_catalog_page", values)
