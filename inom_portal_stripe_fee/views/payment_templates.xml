@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="payment_form_stripe_fee" inherit_id="payment.form" name="Stripe fee acknowledgment">
+        <xpath expr="//form" position="inside">
+            <div class="form-check my-2" id="stripe_fee_ack_wrapper">
+                <input type="checkbox" class="form-check-input" id="stripe_fee_ack" name="stripe_fee_acknowledged" value="1"/>
+                <label class="form-check-label" for="stripe_fee_ack">
+                    I acknowledge a 1.5% credit card surcharge applies to Stripe payments.
+                </label>
+            </div>
+        </xpath>
+    </template>
+</odoo>
