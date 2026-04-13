@@ -1,0 +1,16 @@
+.past-work-wrap {
+    background: linear-gradient(180deg, #f7f9fc 0%, #ffffff 100%);
+}
+
+.past-work-sidebar {
+    position: sticky;
+    top: 1rem;
+}
+
+.past-work-card {
+    border: 0;
+}
+
+.past-work-card summary {
+    cursor: pointer;
+}
