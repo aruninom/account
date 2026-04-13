@@ -13,6 +13,7 @@
     "assets": {
         "web.assets_frontend": [
             "inom_past_work_catalog/static/src/css/past_work.css",
+            "inom_past_work_catalog/static/src/js/past_work_filters.js",
         ],
     },
     "installable": True,

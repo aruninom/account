@@ -8,7 +8,6 @@
             <xpath expr="//sheet/group" position="after">
                 <group string="Past Work Catalog">
                     <field name="show_in_past_work"/>
-                    <field name="past_work_is_published"/>
                     <field name="past_work_sector"/>
                     <field name="past_work_type"/>
                     <field name="past_work_short_description"/>
