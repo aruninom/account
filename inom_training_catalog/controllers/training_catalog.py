@@ -3,7 +3,17 @@ from odoo.http import request
 
 
 class TrainingCatalogController(http.Controller):
-    @http.route(["/training", "/training/<string:view_mode>"], type="http", auth="public", website=True)
+    @http.route(
+        [
+            "/training",
+            "/training/<string:view_mode>",
+            "/course-training",
+            "/course-training/<string:view_mode>",
+        ],
+        type="http",
+        auth="public",
+        website=True,
+    )
     def training_catalog(self, view_mode="upcoming", **kwargs):
         Event = request.env["event.event"].sudo()
         provider_type = kwargs.get("provider_type")

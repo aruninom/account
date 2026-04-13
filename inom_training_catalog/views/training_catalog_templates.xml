@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="training_catalog_page" name="Training Catalog">
+    <template id="training_catalog_page" name="Course Training">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
                 <section class="s_text_block py-5">
                     <div class="container">
-                        <h1 class="mb-3">Training Courses</h1>
+                        <h1 class="mb-3">Course Training</h1>
                         <p class="text-muted">
                             Browse upcoming events and the full portfolio of courses.
                         </p>
 
                         <div class="btn-group mb-4" role="group">
-                            <a t-attf-class="btn #{'btn-primary' if view_mode == 'upcoming' else 'btn-outline-primary'}" t-attf-href="/training/upcoming?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;scheduled=#{scheduled or ''}&amp;published=#{published or ''}">Upcoming events</a>
-                            <a t-attf-class="btn #{'btn-primary' if view_mode == 'portfolio' else 'btn-outline-primary'}" t-attf-href="/training/portfolio?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;scheduled=#{scheduled or ''}&amp;published=#{published or ''}">Course portfolio</a>
+                            <a t-attf-class="btn #{'btn-primary' if view_mode == 'upcoming' else 'btn-outline-primary'}" t-attf-href="/course-training/upcoming?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;scheduled=#{scheduled or ''}&amp;published=#{published or ''}">Upcoming events</a>
+                            <a t-attf-class="btn #{'btn-primary' if view_mode == 'portfolio' else 'btn-outline-primary'}" t-attf-href="/course-training/portfolio?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;scheduled=#{scheduled or ''}&amp;published=#{published or ''}">Course portfolio</a>
                         </div>
 
                         <form method="get" class="row g-2 mb-4">
@@ -100,8 +100,8 @@
     </template>
 
     <record id="training_catalog_menu_item" model="website.menu">
-        <field name="name">Training</field>
-        <field name="url">/training/upcoming</field>
+        <field name="name">Course Training</field>
+        <field name="url">/course-training/upcoming</field>
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence" eval="80"/>
     </record>
