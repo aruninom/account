@@ -84,6 +84,11 @@ class EventEvent(models.Model):
         user = self.env.user
         return not self.provider_type == "iap2" or not user._is_public()
 
+    def website_can_see_event_date(self):
+        self.ensure_one()
+        user = self.env.user
+        return not self.provider_type == "iap2" or not user._is_public()
+
     def website_pdf_url(self):
         self.ensure_one()
         if not self.training_pdf_attachment_id:
