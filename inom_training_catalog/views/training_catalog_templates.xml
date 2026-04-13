@@ -11,53 +11,64 @@
                         </p>
 
                         <div class="btn-group mb-4" role="group">
-                            <a t-attf-class="btn #{'btn-primary' if view_mode == 'upcoming' else 'btn-outline-primary'}" t-attf-href="/training/upcoming?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;show_scheduled=#{show_scheduled or ''}&amp;show_unscheduled=#{show_unscheduled or ''}&amp;show_published=#{show_published or ''}&amp;show_unpublished=#{show_unpublished or ''}">Upcoming events</a>
-                            <a t-attf-class="btn #{'btn-primary' if view_mode == 'portfolio' else 'btn-outline-primary'}" t-attf-href="/training/portfolio?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;show_scheduled=#{show_scheduled or ''}&amp;show_unscheduled=#{show_unscheduled or ''}&amp;show_published=#{show_published or ''}&amp;show_unpublished=#{show_unpublished or ''}">Course portfolio</a>
+                            <a
+                                t-attf-class="btn #{'btn-primary' if view_mode == 'upcoming' else 'btn-outline-primary'}"
+                                t-attf-href="/course-training/upcoming?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;scheduled=#{scheduled or ''}&amp;published=#{published or ''}">Upcoming
+                                events</a>
+                            <a
+                                t-attf-class="btn #{'btn-primary' if view_mode == 'portfolio' else 'btn-outline-primary'}"
+                                t-attf-href="/course-training/portfolio?provider_type=#{provider_type or ''}&amp;content_type=#{content_type or ''}&amp;q=#{q or ''}&amp;scheduled=#{scheduled or ''}&amp;published=#{published or ''}">Course
+                                portfolio</a>
                         </div>
 
                         <form method="get" class="row g-2 mb-4">
-                    <div class="col-md-3">
-                        <input type="text" name="q" class="form-control" placeholder="Search courses" t-att-value="q or ''"/>
-                    </div>
-                    <div class="col-md-2">
-                        <select name="provider_type" class="form-select">
-                            <option value="">All providers</option>
-                            <option value="aha" t-att-selected="provider_type == 'aha'">Aha Academy</option>
-                            <option value="iap2" t-att-selected="provider_type == 'iap2'">IAP2</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select name="content_type" class="form-select">
-                            <option value="">All content types</option>
-                            <option value="engagement" t-att-selected="content_type == 'engagement'">Engagement</option>
-                            <option value="conflict" t-att-selected="content_type == 'conflict'">Conflict</option>
-                            <option value="facilitation" t-att-selected="content_type == 'facilitation'">Facilitation</option>
-                            <option value="evaluation" t-att-selected="content_type == 'evaluation'">Evaluation</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 d-flex flex-column justify-content-center">
-                        <label class="form-check mb-1">
-                            <input type="checkbox" class="form-check-input" name="show_scheduled" value="1" t-att-checked="'checked' if show_scheduled else None"/>
-                            <span class="form-check-label">Scheduled</span>
-                        </label>
-                        <label class="form-check">
-                            <input type="checkbox" class="form-check-input" name="show_unscheduled" value="1" t-att-checked="'checked' if show_unscheduled else None"/>
-                            <span class="form-check-label">Unscheduled</span>
-                        </label>
-                    </div>
-                    <div class="col-md-2 d-flex flex-column justify-content-center">
-                        <label class="form-check mb-1">
-                            <input type="checkbox" class="form-check-input" name="show_published" value="1" t-att-checked="'checked' if show_published else None"/>
-                            <span class="form-check-label">Published</span>
-                        </label>
-                        <label class="form-check">
-                            <input type="checkbox" class="form-check-input" name="show_unpublished" value="1" t-att-checked="'checked' if show_unpublished else None"/>
-                            <span class="form-check-label">Unpublished</span>
-                        </label>
-                    </div>
-                    <div class="col-md-1 d-grid">
-                        <button type="submit" class="btn btn-primary">Go</button>
-                    </div>
+                            <div class="col-md-3">
+                                <input type="text" name="q" class="form-control"
+                                    placeholder="Search courses" t-att-value="q or ''" />
+                            </div>
+                            <div class="col-md-2">
+                                <select name="provider_type" class="form-select">
+                                    <option value="">All providers</option>
+                                    <option value="aha" t-att-selected="provider_type == 'aha'">Aha
+                                        Academy</option>
+                                    <option value="iap2" t-att-selected="provider_type == 'iap2'">
+                                        IAP2</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="content_type" class="form-select">
+                                    <option value="">All content types</option>
+                                    <option value="engagement"
+                                        t-att-selected="content_type == 'engagement'">Engagement</option>
+                                    <option value="conflict"
+                                        t-att-selected="content_type == 'conflict'">Conflict</option>
+                                    <option value="facilitation"
+                                        t-att-selected="content_type == 'facilitation'">Facilitation</option>
+                                    <option value="evaluation"
+                                        t-att-selected="content_type == 'evaluation'">Evaluation</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="scheduled" class="form-select">
+                                    <option value="">All schedule states</option>
+                                    <option value="scheduled"
+                                        t-att-selected="scheduled == 'scheduled'">Scheduled</option>
+                                    <option value="unscheduled"
+                                        t-att-selected="scheduled == 'unscheduled'">Unscheduled</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="published" class="form-select">
+                                    <option value="">Published + Unpublished</option>
+                                    <option value="published"
+                                        t-att-selected="published == 'published'">Published only</option>
+                                    <option value="unpublished"
+                                        t-att-selected="published == 'unpublished'">Unpublished only</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 d-grid">
+                                <button type="submit" class="btn btn-primary">Go</button>
+                            </div>
                         </form>
 
                         <t t-if="not events">
@@ -65,42 +76,86 @@
                         </t>
 
                         <div class="row g-3" t-if="events">
-                    <t t-foreach="events" t-as="course">
-                        <div class="col-12 col-lg-6">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title" t-esc="course.name"/>
-                                    <p class="mb-1"><strong>Provider:</strong> <span t-esc="dict(course._fields['provider_type'].selection).get(course.provider_type, '-')"/></p>
-                                    <p class="mb-1"><strong>Content type:</strong> <span t-esc="dict(course._fields['content_type'].selection).get(course.content_type, '-')"/></p>
+                            <t t-foreach="events" t-as="course">
+                                <div class="col-12 col-lg-6">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title" t-esc="course.name" />
+                                            <p class="mb-1">
+                                                <strong>Provider:</strong>
+                                                <span
+                                                    t-esc="dict(course._fields['provider_type'].selection).get(course.provider_type, '-')" />
+                                            </p>
+                                            <p class="mb-1">
+                                                <strong>Content type:</strong>
+                                                <span
+                                                    t-esc="dict(course._fields['content_type'].selection).get(course.content_type, '-')" />
+                                            </p>
 
-                                    <t t-if="course.schedule_state == 'scheduled' and course.website_can_see_event_date()">
-                                        <p class="mb-1"><strong>Date:</strong> <span t-field="course.date_begin"/></p>
-                                    </t>
-                                    <t t-elif="course.schedule_state == 'scheduled'">
-                                        <p class="mb-1"><strong>Date:</strong> Visible after login for IAP2 courses</p>
-                                    </t>
-                                    <t t-else="">
-                                        <p class="mb-1"><strong>Date:</strong> Not currently scheduled</p>
-                                    </t>
+                                            <t
+                                                t-if="course.provider_type != 'iap2' or course.website_can_see_restricted_fields()">
+                                                <t t-if="course.schedule_state == 'scheduled'">
+                                                    <p class="mb-1">
+                                                        <strong>Date:</strong>
+                                                        <span t-field="course.date_begin" />
+                                                    </p>
+                                                </t>
+                                                <t t-else="">
+                                                    <p class="mb-1"><strong>Date:</strong> Not
+                                                        currently scheduled</p>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <p class="mb-1"><strong>Date:</strong> Login to view
+                                                    schedule</p>
+                                            </t>
 
-                                    <t t-if="course.website_can_see_restricted_fields()">
-                                        <p class="mb-1" t-if="'price' in course._fields and course.price"><strong>Price:</strong> <span t-esc="course.price"/></p>
-                                        <p class="mb-1" t-if="'seats_available' in course._fields and course.seats_available is not None"><strong>Seats available:</strong> <span t-esc="course.seats_available"/></p>
-                                    </t>
-                                    <t t-else="">
-                                        <div class="alert alert-secondary py-2 my-2">
-                                            Some details (date, pricing, and booking) are visible after login for IAP2 courses.
+                                            <t t-if="course.website_can_see_restricted_fields()">
+                                                <p class="mb-1"
+                                                    t-if="'price' in course._fields and course.price">
+                                                    <strong>Price:</strong>
+                                                    <span t-esc="course.price" />
+                                                </p>
+                                                <p class="mb-1"
+                                                    t-if="'seats_available' in course._fields and course.seats_available is not None">
+                                                    <strong>Seats available:</strong>
+                                                    <span t-esc="course.seats_available" />
+                                                </p>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="alert alert-secondary py-2 my-2">
+                                                    Some details are visible after login for IAP2
+                                                    courses.
+                                                </div>
+                                            </t>
                                         </div>
-                                    </t>
+                                        <div class="card-footer d-flex flex-wrap gap-2">
+                                            <a t-if="course.booking_url"
+                                                t-att-href="course.booking_url"
+                                                class="btn btn-sm btn-primary">
+                                                Book Now
+                                            </a>
+
+                                            <a t-if="not course.booking_url"
+                                                t-att-href="'/event/%s/register' % course.id"
+                                                class="btn btn-sm btn-primary">
+                                                Book via Odoo
+                                            </a>
+                                            <a t-if="course.more_info_url"
+                                                t-att-href="course.more_info_url"
+                                                class="btn btn-sm btn-outline-primary">More
+                                                information</a>
+                                            <t t-if="course.website_can_see_restricted_fields()">
+                                                <a t-if="course.website_pdf_url()"
+                                                    t-att-href="course.website_pdf_url()"
+                                                    class="btn btn-sm btn-outline-secondary">
+                                                    Download PDF
+                                                </a>
+                                            </t>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-footer d-flex flex-wrap gap-2">
-                                    <a t-if="course.booking_url and course.website_can_see_restricted_fields()" t-att-href="course.booking_url" class="btn btn-sm btn-primary">Booking link</a>
-                                    <a t-if="course.more_info_url" t-att-href="course.more_info_url" class="btn btn-sm btn-outline-primary">More information</a>
-                                    <a t-if="course.website_pdf_url()" t-att-href="course.website_pdf_url()" class="btn btn-sm btn-outline-secondary">Download PDF</a>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
+                            </t>
                         </div>
                     </div>
                 </section>
@@ -108,10 +163,10 @@
         </t>
     </template>
 
-    <record id="training_catalog_menu_item" model="website.menu">
-        <field name="name">Training</field>
-        <field name="url">/training/upcoming</field>
-        <field name="parent_id" ref="website.main_menu"/>
-        <field name="sequence" eval="80"/>
+    <record id="training_catalog_menu_item_new" model="website.menu">
+        <field name="name">Course Training</field>
+        <field name="url">/course-training</field>
+        <field name="parent_id" ref="website.main_menu" />
+        <field name="sequence" eval="80" />
     </record>
 </odoo>
