@@ -36,7 +36,20 @@ class TrainingCatalogController(http.Controller):
             base_domain.append(("visibility_state", "=", published))
 
         if query:
-            base_domain += ["|", "|", ("name", "ilike", query), ("subtitle", "ilike", query), ("description", "ilike", query)]
+            search_fields = [field for field in ("name", "subtitle", "description") if field in Event._fields]
+            if search_fields:
+                if len(search_fields) == 1:
+                    base_domain.append((search_fields[0], "ilike", query))
+                elif len(search_fields) == 2:
+                    base_domain += ["|", (search_fields[0], "ilike", query), (search_fields[1], "ilike", query)]
+                else:
+                    base_domain += [
+                        "|",
+                        "|",
+                        (search_fields[0], "ilike", query),
+                        (search_fields[1], "ilike", query),
+                        (search_fields[2], "ilike", query),
+                    ]
 
         events = Event.search(base_domain, order="date_begin asc, name asc")
 

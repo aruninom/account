@@ -73,8 +73,8 @@
                                     </t>
 
                                     <t t-if="course.website_can_see_restricted_fields()">
-                                        <p class="mb-1" t-if="course.price"><strong>Price:</strong> <span t-esc="course.price"/></p>
-                                        <p class="mb-1" t-if="course.seats_available is not None"><strong>Seats available:</strong> <span t-esc="course.seats_available"/></p>
+                                        <p class="mb-1" t-if="'price' in course._fields and course.price"><strong>Price:</strong> <span t-esc="course.price"/></p>
+                                        <p class="mb-1" t-if="'seats_available' in course._fields and course.seats_available is not None"><strong>Seats available:</strong> <span t-esc="course.seats_available"/></p>
                                     </t>
                                     <t t-else="">
                                         <div class="alert alert-secondary py-2 my-2">
