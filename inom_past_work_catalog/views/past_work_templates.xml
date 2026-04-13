@@ -63,7 +63,7 @@
                                                         <span class="badge rounded-pill text-bg-secondary" t-esc="dict(project._fields['past_work_type'].selection).get(project.past_work_type, '-')"/>
                                                     </div>
                                                     <h2 class="h4" t-esc="project.name"/>
-                                                    <p class="text-muted mb-3" t-esc="project.past_work_short_description or project.subtitle or ''"/>
+                                                    <p class="text-muted mb-3" t-esc="project.past_work_short_description or ''"/>
 
                                                     <details>
                                                         <summary class="fw-semibold">View details</summary>

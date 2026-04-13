@@ -5,9 +5,9 @@
     "category": "Website/Event",
     "author": "INOM",
     "license": "LGPL-3",
-    "depends": ["website", "event", "website_event"],
+    "depends": ["website", "project"],
     "data": [
-        "views/event_event_views.xml",
+        "views/project_project_views.xml",
         "views/past_work_templates.xml",
     ],
     "assets": {
