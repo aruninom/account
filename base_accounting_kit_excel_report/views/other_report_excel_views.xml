@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="partner_ledger_view_form_excel_inherit" model="ir.ui.view">
+        <field name="name">partner.ledger.view.form.excel.inherit</field>
+        <field name="model">account.report.partner.ledger</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_report_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@name='check_report']" position="after">
+                <button string="Print Excel" name="action_print_excel" type="object" class="btn btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="bank_book_view_form_excel_inherit" model="ir.ui.view">
+        <field name="name">bank.book.view.form.excel.inherit</field>
+        <field name="model">account.bank.book.report</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_bank_book_report_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@name='check_report']" position="after">
+                <button string="Print Excel" name="action_print_excel" type="object" class="btn btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cash_book_view_form_excel_inherit" model="ir.ui.view">
+        <field name="name">cash.book.view.form.excel.inherit</field>
+        <field name="model">account.cash.book.report</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_cash_book_report_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@name='check_report']" position="after">
+                <button string="Print Excel" name="action_print_excel" type="object" class="btn btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="day_book_view_form_excel_inherit" model="ir.ui.view">
+        <field name="name">day.book.view.form.excel.inherit</field>
+        <field name="model">account.day.book.report</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_day_book_report_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@name='check_report']" position="after">
+                <button string="Print Excel" name="action_print_excel" type="object" class="btn btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cash_flow_view_form_excel_inherit" model="ir.ui.view">
+        <field name="name">cash.flow.view.form.excel.inherit</field>
+        <field name="model">cash.flow.report</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_report_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@name='check_report']" position="after">
+                <button string="Print Excel" name="action_print_excel" type="object" class="btn btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
