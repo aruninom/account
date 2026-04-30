@@ -15,14 +15,19 @@ class ExcelReportMixin(models.AbstractModel):
         builder(workbook)
         workbook.close()
         output.seek(0)
-        attachment = self.env['ir.attachment'].create({
+        attachment_vals = {
             'name': filename,
             'type': 'binary',
             'datas': base64.b64encode(output.read()),
-            'res_model': self._name,
-            'res_id': self.id,
             'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        })
+        }
+        if self.env.context.get('active_model') and self.env.context.get('active_id'):
+            attachment_vals.update({
+                'res_model': self.env.context['active_model'],
+                'res_id': self.env.context['active_id'],
+            })
+
+        attachment = self.env['ir.attachment'].create(attachment_vals)
         return {
             'type': 'ir.actions.act_url',
             'url': f'/web/content/{attachment.id}?download=true',
