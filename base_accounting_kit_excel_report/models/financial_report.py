@@ -58,14 +58,19 @@ class FinancialReport(models.TransientModel):
         row += 1
 
         for line in report_lines:
-            level = line.get('level', 1)
+            raw_level = line.get('level', 1)
+            try:
+                level = int(raw_level or 1)
+            except (TypeError, ValueError):
+                level = 1
+
             name = ('    ' * max(level - 1, 0)) + (line.get('name') or '')
             line_format = level_bold_format if line.get('type') == 'report' else text_format
 
             sheet.write(row, 0, name, line_format)
-            sheet.write_number(row, 1, float(line.get('debit', 0.0)), money_format)
-            sheet.write_number(row, 2, float(line.get('credit', 0.0)), money_format)
-            sheet.write_number(row, 3, float(line.get('balance', 0.0)), money_format)
+            sheet.write_number(row, 1, float(line.get('debit') or 0.0), money_format)
+            sheet.write_number(row, 2, float(line.get('credit') or 0.0), money_format)
+            sheet.write_number(row, 3, float(line.get('balance') or 0.0), money_format)
             row += 1
 
         sheet.set_column('A:A', 45)
