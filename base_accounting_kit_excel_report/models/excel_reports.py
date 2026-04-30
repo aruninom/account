@@ -271,3 +271,61 @@ class AccountPrintJournalExcel(models.TransientModel):
             ws.set_column('G:H', 16)
 
         return self.env['excel.report.mixin']._create_excel_attachment('Journal Audit.xlsx', build)
+
+
+class AccountAgedTrialBalanceExcel(models.TransientModel):
+    _inherit = 'account.aged.trial.balance'
+
+    def action_print_excel(self):
+        self.ensure_one()
+        data = {'form': self.read(['date_from', 'result_selection', 'target_move', 'period_length'])[0]}
+        values = self.env['report.base_accounting_kit.report_agedpartnerbalance'].with_context(active_model=self._name, active_ids=self.ids)._get_report_values(self.ids, data=data)
+
+        def build(workbook):
+            ws = workbook.add_worksheet('Aged Partner Balance')
+            h = workbook.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
+            b = workbook.add_format({'border': 1})
+            m = workbook.add_format({'border': 1, 'num_format': '#,##0.00'})
+            row = 0
+            ws.write_row(row, 0, ['Partner', 'Not Due', '0-30', '31-60', '61-90', '91-120', '+120', 'Total'], h)
+            row += 1
+            for line in values.get('get_partner_lines', []):
+                ws.write(row, 0, line.get('name', ''), b)
+                ws.write_number(row, 1, float(line.get('direction') or 0.0), m)
+                ws.write_number(row, 2, float(line.get('4') or 0.0), m)
+                ws.write_number(row, 3, float(line.get('3') or 0.0), m)
+                ws.write_number(row, 4, float(line.get('2') or 0.0), m)
+                ws.write_number(row, 5, float(line.get('1') or 0.0), m)
+                ws.write_number(row, 6, float(line.get('0') or 0.0), m)
+                ws.write_number(row, 7, float(line.get('total') or 0.0), m)
+                row += 1
+
+        return self.env['excel.report.mixin']._create_excel_attachment('Aged Partner Balance.xlsx', build)
+
+
+class AccountTrialBalanceExcel(models.TransientModel):
+    _inherit = 'account.balance.report'
+
+    def action_print_excel(self):
+        self.ensure_one()
+        data = {'form': self.read(['date_from', 'date_to', 'target_move', 'display_account'])[0]}
+        data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
+        values = self.env['report.base_accounting_kit.report_trial_balance'].with_context(active_model=self._name, active_ids=self.ids)._get_report_values(self.ids, data=data)
+
+        def build(workbook):
+            ws = workbook.add_worksheet('Trial Balance')
+            h = workbook.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
+            b = workbook.add_format({'border': 1})
+            m = workbook.add_format({'border': 1, 'num_format': '#,##0.00'})
+            row = 0
+            ws.write_row(row, 0, ['Code', 'Account', 'Debit', 'Credit', 'Balance'], h)
+            row += 1
+            for acc in values.get('Accounts', []):
+                ws.write(row, 0, acc.get('code', ''), b)
+                ws.write(row, 1, acc.get('name', ''), b)
+                ws.write_number(row, 2, float(acc.get('debit') or 0.0), m)
+                ws.write_number(row, 3, float(acc.get('credit') or 0.0), m)
+                ws.write_number(row, 4, float(acc.get('balance') or 0.0), m)
+                row += 1
+
+        return self.env['excel.report.mixin']._create_excel_attachment('Trial Balance.xlsx', build)
