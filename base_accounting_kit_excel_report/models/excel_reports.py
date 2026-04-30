@@ -80,22 +80,49 @@ class AccountBankBookExcel(models.TransientModel):
 
         def build(workbook):
             ws = workbook.add_worksheet('Bank Book')
+            title = workbook.add_format({'bold': True, 'font_size': 14})
+            sub_h = workbook.add_format({'bold': True})
             h = workbook.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
             b = workbook.add_format({'border': 1})
             m = workbook.add_format({'border': 1, 'num_format': '#,##0.00'})
+
             row = 0
-            ws.write_row(row, 0, ['Account', 'Date', 'Journal', 'Label', 'Debit', 'Credit', 'Balance'], h)
+            ws.merge_range(row, 0, row, 9, f"{self.company_id.name or ''}: Bank Book Report", title)
+            row += 2
+            ws.write(row, 0, 'Journals:', sub_h)
+            ws.write(row, 1, ', '.join(values.get('print_journal', [])))
+            ws.write(row, 4, 'Display Account', sub_h)
+            ws.write(row, 5, 'With movements')
+            ws.write(row, 7, 'Target Moves:', sub_h)
+            ws.write(row, 8, 'All Posted Entries' if self.target_move == 'posted' else 'All Entries')
+            row += 2
+            ws.write(row, 0, 'Sorted By:', sub_h)
+            ws.write(row, 1, 'Date' if self.sortby == 'sort_date' else 'Journal & Partner')
+            ws.write(row, 7, 'Date from :', sub_h)
+            ws.write(row, 8, fields.Date.to_string(self.date_from) if self.date_from else '')
             row += 1
-            for acc in values['Accounts']:
+            ws.write(row, 7, 'Date to :', sub_h)
+            ws.write(row, 8, fields.Date.to_string(self.date_to) if self.date_to else '')
+            row += 2
+
+            ws.write_row(row, 0, ['Date', 'JRNL', 'Partner', 'Ref', 'Move', 'Entry Label', 'Debit', 'Credit', 'Balance', 'Currency'], h)
+            row += 1
+            for acc in values.get('Accounts', []):
                 for line in acc.get('move_lines', []):
-                    ws.write(row, 0, f"{acc.get('code','')} {acc.get('name','')}", b)
-                    ws.write(row, 1, fields.Date.to_string(line.get('ldate')) if line.get('ldate') else '', b)
-                    ws.write(row, 2, line.get('lcode', ''), b)
-                    ws.write(row, 3, line.get('lname', ''), b)
-                    ws.write_number(row, 4, float(line.get('debit', 0.0)), m)
-                    ws.write_number(row, 5, float(line.get('credit', 0.0)), m)
-                    ws.write_number(row, 6, float(line.get('balance', 0.0)), m)
+                    ws.write(row, 0, fields.Date.to_string(line.get('ldate')) if line.get('ldate') else '', b)
+                    ws.write(row, 1, line.get('lcode', ''), b)
+                    ws.write(row, 2, line.get('partner_name', ''), b)
+                    ws.write(row, 3, line.get('lref', ''), b)
+                    ws.write(row, 4, line.get('move_name', ''), b)
+                    ws.write(row, 5, line.get('lname', ''), b)
+                    ws.write_number(row, 6, float(line.get('debit') or 0.0), m)
+                    ws.write_number(row, 7, float(line.get('credit') or 0.0), m)
+                    ws.write_number(row, 8, float(line.get('balance') or 0.0), m)
+                    ws.write(row, 9, line.get('currency_code', ''), b)
                     row += 1
+            ws.set_column('A:F', 18)
+            ws.set_column('G:I', 14)
+            ws.set_column('J:J', 12)
         return self.env['excel.report.mixin']._create_excel_attachment('Bank Book.xlsx', build)
 
 
@@ -109,22 +136,49 @@ class AccountCashBookExcel(models.TransientModel):
         values = self.env['report.base_accounting_kit.report_cash_book'].with_context(data['form']['used_context'], active_model=self._name, active_ids=self.ids)._get_report_values(self.ids, data=data)
         def build(workbook):
             ws = workbook.add_worksheet('Cash Book')
+            title = workbook.add_format({'bold': True, 'font_size': 14})
+            sub_h = workbook.add_format({'bold': True})
             h = workbook.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
             b = workbook.add_format({'border': 1})
             m = workbook.add_format({'border': 1, 'num_format': '#,##0.00'})
+
             row = 0
-            ws.write_row(row, 0, ['Account', 'Date', 'Journal', 'Label', 'Debit', 'Credit', 'Balance'], h)
+            ws.merge_range(row, 0, row, 9, f"{self.company_id.name or ''}: Cash Book Report", title)
+            row += 2
+            ws.write(row, 0, 'Journals:', sub_h)
+            ws.write(row, 1, ', '.join(values.get('print_journal', [])))
+            ws.write(row, 4, 'Display Account', sub_h)
+            ws.write(row, 5, 'With movements')
+            ws.write(row, 7, 'Target Moves:', sub_h)
+            ws.write(row, 8, 'All Posted Entries' if self.target_move == 'posted' else 'All Entries')
+            row += 2
+            ws.write(row, 0, 'Sorted By:', sub_h)
+            ws.write(row, 1, 'Date' if self.sortby == 'sort_date' else 'Journal & Partner')
+            ws.write(row, 7, 'Date from :', sub_h)
+            ws.write(row, 8, fields.Date.to_string(self.date_from) if self.date_from else '')
             row += 1
-            for acc in values['Accounts']:
+            ws.write(row, 7, 'Date to :', sub_h)
+            ws.write(row, 8, fields.Date.to_string(self.date_to) if self.date_to else '')
+            row += 2
+
+            ws.write_row(row, 0, ['Date', 'JRNL', 'Partner', 'Ref', 'Move', 'Entry Label', 'Debit', 'Credit', 'Balance', 'Currency'], h)
+            row += 1
+            for acc in values.get('Accounts', []):
                 for line in acc.get('move_lines', []):
-                    ws.write(row, 0, f"{acc.get('code','')} {acc.get('name','')}", b)
-                    ws.write(row, 1, fields.Date.to_string(line.get('ldate')) if line.get('ldate') else '', b)
-                    ws.write(row, 2, line.get('lcode', ''), b)
-                    ws.write(row, 3, line.get('lname', ''), b)
-                    ws.write_number(row, 4, float(line.get('debit', 0.0)), m)
-                    ws.write_number(row, 5, float(line.get('credit', 0.0)), m)
-                    ws.write_number(row, 6, float(line.get('balance', 0.0)), m)
+                    ws.write(row, 0, fields.Date.to_string(line.get('ldate')) if line.get('ldate') else '', b)
+                    ws.write(row, 1, line.get('lcode', ''), b)
+                    ws.write(row, 2, line.get('partner_name', ''), b)
+                    ws.write(row, 3, line.get('lref', ''), b)
+                    ws.write(row, 4, line.get('move_name', ''), b)
+                    ws.write(row, 5, line.get('lname', ''), b)
+                    ws.write_number(row, 6, float(line.get('debit') or 0.0), m)
+                    ws.write_number(row, 7, float(line.get('credit') or 0.0), m)
+                    ws.write_number(row, 8, float(line.get('balance') or 0.0), m)
+                    ws.write(row, 9, line.get('currency_code', ''), b)
                     row += 1
+            ws.set_column('A:F', 18)
+            ws.set_column('G:I', 14)
+            ws.set_column('J:J', 12)
         return self.env['excel.report.mixin']._create_excel_attachment('Cash Book.xlsx', build)
 
 
