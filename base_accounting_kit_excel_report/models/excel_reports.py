@@ -178,3 +178,37 @@ class CashFlowReportExcel(models.TransientModel):
                 ws.write_number(row, 3, float(line.get('balance', 0.0)), m)
                 row += 1
         return self.env['excel.report.mixin']._create_excel_attachment('Cash Flow Statement.xlsx', build)
+
+
+class AccountPrintJournalExcel(models.TransientModel):
+    _inherit = 'account.print.journal'
+
+    def action_print_excel(self):
+        self.ensure_one()
+        data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'sort_selection'])[0]}
+        data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
+        values = self.env['report.base_accounting_kit.report_journal_audit']._get_report_values([], data=data)
+
+        def build(workbook):
+            ws = workbook.add_worksheet('Journal Audit')
+            h = workbook.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
+            b = workbook.add_format({'border': 1})
+            m = workbook.add_format({'border': 1, 'num_format': '#,##0.00'})
+            row = 0
+            ws.write_row(row, 0, ['Journal', 'Date', 'Entry', 'Account', 'Partner', 'Label', 'Debit', 'Credit'], h)
+            row += 1
+            for journal in values['docs']:
+                for line in values['lines'].get(journal, self.env['account.move.line']):
+                    ws.write(row, 0, journal.display_name or '', b)
+                    ws.write(row, 1, fields.Date.to_string(line.date) if line.date else '', b)
+                    ws.write(row, 2, line.move_id.name or '', b)
+                    ws.write(row, 3, line.account_id.display_name or '', b)
+                    ws.write(row, 4, line.partner_id.display_name or '', b)
+                    ws.write(row, 5, line.name or '', b)
+                    ws.write_number(row, 6, float(line.debit or 0.0), m)
+                    ws.write_number(row, 7, float(line.credit or 0.0), m)
+                    row += 1
+            ws.set_column('A:F', 28)
+            ws.set_column('G:H', 16)
+
+        return self.env['excel.report.mixin']._create_excel_attachment('Journal Audit.xlsx', build)
