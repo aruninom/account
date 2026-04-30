@@ -189,6 +189,10 @@ class AccountDayBookExcel(models.TransientModel):
     def action_print_excel(self):
         self.ensure_one()
         data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'account_ids'])[0]}
+        if data['form'].get('date_from'):
+            data['form']['date_from'] = fields.Date.to_string(data['form']['date_from'])
+        if data['form'].get('date_to'):
+            data['form']['date_to'] = fields.Date.to_string(data['form']['date_to'])
         data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
         values = self.env['report.base_accounting_kit.day_book_report_template'].with_context(active_model=self._name, active_id=self.id, active_ids=self.ids)._get_report_values(self.ids, data=data)
 
