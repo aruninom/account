@@ -57,15 +57,27 @@ class FinancialReport(models.TransientModel):
         sheet.write(row, 3, 'Balance', header_format)
         row += 1
 
+        def _safe_int(value, default=1):
+            try:
+                return int(value)
+            except (TypeError, ValueError):
+                return default
+
+        def _safe_float(value, default=0.0):
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return default
+
         for line in report_lines:
-            level = line.get('level', 1)
+            level = _safe_int(line.get('level', 1), default=1)
             name = ('    ' * max(level - 1, 0)) + (line.get('name') or '')
             line_format = level_bold_format if line.get('type') == 'report' else text_format
 
             sheet.write(row, 0, name, line_format)
-            sheet.write_number(row, 1, float(line.get('debit', 0.0)), money_format)
-            sheet.write_number(row, 2, float(line.get('credit', 0.0)), money_format)
-            sheet.write_number(row, 3, float(line.get('balance', 0.0)), money_format)
+            sheet.write_number(row, 1, _safe_float(line.get('debit', 0.0)), money_format)
+            sheet.write_number(row, 2, _safe_float(line.get('credit', 0.0)), money_format)
+            sheet.write_number(row, 3, _safe_float(line.get('balance', 0.0)), money_format)
             row += 1
 
         sheet.set_column('A:A', 45)
