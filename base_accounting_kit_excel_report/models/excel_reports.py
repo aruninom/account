@@ -15,14 +15,19 @@ class ExcelReportMixin(models.AbstractModel):
         builder(workbook)
         workbook.close()
         output.seek(0)
-        attachment = self.env['ir.attachment'].create({
+        attachment_vals = {
             'name': filename,
             'type': 'binary',
             'datas': base64.b64encode(output.read()),
-            'res_model': self._name,
-            'res_id': self.id,
             'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        })
+        }
+        if self.env.context.get('active_model') and self.env.context.get('active_id'):
+            attachment_vals.update({
+                'res_model': self.env.context['active_model'],
+                'res_id': self.env.context['active_id'],
+            })
+
+        attachment = self.env['ir.attachment'].create(attachment_vals)
         return {
             'type': 'ir.actions.act_url',
             'url': f'/web/content/{attachment.id}?download=true',
@@ -38,8 +43,8 @@ class AccountPartnerLedgerExcel(models.TransientModel):
         data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'reconciled', 'amount_currency', 'result_selection'])[0]}
         data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
         data['computed'] = {}
-        report_model = self.env['report.base_accounting_kit.report_partnerledger']
-        values = report_model._get_report_values([], data=data)
+        report_model = self.env['report.base_accounting_kit.report_partnerledger'].with_context(active_model=self._name, active_ids=self.ids)
+        values = report_model._get_report_values(self.ids, data=data)
 
         def build(workbook):
             ws = workbook.add_worksheet('Partner Ledger')
@@ -71,7 +76,7 @@ class AccountBankBookExcel(models.TransientModel):
         self.ensure_one()
         data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'display_account', 'account_ids', 'sortby', 'initial_balance'])[0]}
         data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
-        values = self.env['report.base_accounting_kit.report_bank_book'].with_context(data['form']['used_context'])._get_report_values([], data=data)
+        values = self.env['report.base_accounting_kit.report_bank_book'].with_context(data['form']['used_context'], active_model=self._name, active_ids=self.ids)._get_report_values(self.ids, data=data)
 
         def build(workbook):
             ws = workbook.add_worksheet('Bank Book')
@@ -101,7 +106,7 @@ class AccountCashBookExcel(models.TransientModel):
         self.ensure_one()
         data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'display_account', 'account_ids', 'sortby', 'initial_balance'])[0]}
         data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
-        values = self.env['report.base_accounting_kit.report_cash_book'].with_context(data['form']['used_context'])._get_report_values([], data=data)
+        values = self.env['report.base_accounting_kit.report_cash_book'].with_context(data['form']['used_context'], active_model=self._name, active_ids=self.ids)._get_report_values(self.ids, data=data)
         def build(workbook):
             ws = workbook.add_worksheet('Cash Book')
             h = workbook.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
@@ -130,7 +135,7 @@ class AccountDayBookExcel(models.TransientModel):
         self.ensure_one()
         data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'account_ids'])[0]}
         data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
-        values = self.env['report.base_accounting_kit.day_book_report_template']._get_report_values([], data=data)
+        values = self.env['report.base_accounting_kit.day_book_report_template'].with_context(active_model=self._name, active_ids=self.ids)._get_report_values(self.ids, data=data)
 
         def build(workbook):
             ws = workbook.add_worksheet('Day Book')
@@ -187,7 +192,7 @@ class AccountPrintJournalExcel(models.TransientModel):
         self.ensure_one()
         data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'sort_selection'])[0]}
         data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
-        values = self.env['report.base_accounting_kit.report_journal_audit']._get_report_values([], data=data)
+        values = self.env['report.base_accounting_kit.report_journal_audit'].with_context(active_model=self._name, active_ids=self.ids)._get_report_values(self.ids, data=data)
 
         def build(workbook):
             ws = workbook.add_worksheet('Journal Audit')
