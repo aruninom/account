@@ -49,25 +49,106 @@ class AccountPartnerLedgerExcel(models.TransientModel):
 
         def build(workbook):
             ws = workbook.add_worksheet('Partner Ledger')
-            h = workbook.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
-            b = workbook.add_format({'border': 1})
-            m = workbook.add_format({'border': 1, 'num_format': '#,##0.00'})
-            row = 0
-            ws.write_row(row, 0, ['Partner', 'Date', 'Entry', 'Debit', 'Credit', 'Balance'], h)
+            title = workbook.add_format({'bold': True, 'font_size': 18})
+            sub_h = workbook.add_format({'bold': True})
+            h = workbook.add_format({'bottom': 1})
+            txt = workbook.add_format({})
+            money = workbook.add_format({'num_format': '#,##0.00'})
+
+            row = 1
+            ws.write(row, 0, 'Partner Ledger', title)
+            row += 2
+            ws.write(row, 0, 'Company:', sub_h)
+            ws.write(row, 1, self.company_id.name or '', txt)
+            ws.write(row, 4, 'Target Moves:', sub_h)
+            ws.write(row, 5, 'All Posted Entries' if self.target_move == 'posted' else 'All Entries', txt)
+            row += 2
+
+            ws.write_row(row, 0, ['Date', 'JRNL', 'Ref', 'Debit', 'Credit', 'Balance'], h)
             row += 1
             for partner in values['docs']:
                 for line in values['lines'](data, partner):
-                    ws.write(row, 0, partner.name or '', b)
-                    ws.write(row, 1, fields.Date.to_string(line.get('date')) if line.get('date') else '', b)
-                    ws.write(row, 2, line.get('displayed_name', ''), b)
-                    ws.write_number(row, 3, float(line.get('debit', 0.0)), m)
-                    ws.write_number(row, 4, float(line.get('credit', 0.0)), m)
-                    ws.write_number(row, 5, float(line.get('progress', 0.0)), m)
+                    ws.write(row, 0, fields.Date.to_string(line.get('date')) if line.get('date') else '', txt)
+                    ws.write(row, 1, line.get('code', ''), txt)
+                    ws.write(row, 2, line.get('displayed_name') or line.get('move_name') or line.get('ref') or '', txt)
+                    ws.write_number(row, 3, float(line.get('debit', 0.0)), money)
+                    ws.write_number(row, 4, float(line.get('credit', 0.0)), money)
+                    ws.write_number(row, 5, float(line.get('progress', 0.0)), money)
                     row += 1
-            ws.set_column('A:C', 30)
-            ws.set_column('D:F', 18)
+
+            ws.set_column('A:C', 22)
+            ws.set_column('D:F', 16)
 
         return self.env['excel.report.mixin']._create_excel_attachment('Partner Ledger.xlsx', build)
+
+    def action_print_excel(self):
+        return self.action_print_excel_kit()
+
+
+class AccountGeneralLedgerExcel(models.TransientModel):
+    _inherit = 'account.report.general.ledger'
+
+    def action_print_excel_kit(self):
+        self.ensure_one()
+        data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'display_account', 'account_ids', 'sortby', 'initial_balance'])[0]}
+        data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
+        values = self.env['report.base_accounting_kit.report_general_ledger'].with_context(
+            active_model=self._name,
+            active_id=self.id,
+            active_ids=self.ids,
+        )._get_report_values(self.ids, data=data)
+
+        def build(workbook):
+            ws = workbook.add_worksheet('General Ledger')
+            title = workbook.add_format({'bold': True, 'font_size': 14})
+            sub_h = workbook.add_format({'bold': True})
+            h = workbook.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
+            b = workbook.add_format({'border': 1})
+            m = workbook.add_format({'border': 1, 'num_format': '#,##0.00'})
+
+            row = 0
+            ws.merge_range(row, 0, row, 9, f"{self.company_id.name or ''}: General Ledger Report", title)
+            row += 2
+            ws.write(row, 0, 'Journals:', sub_h)
+            ws.write(row, 1, ', '.join(values.get('print_journal', [])))
+            ws.write(row, 4, 'Display Account', sub_h)
+            ws.write(row, 5, self.display_account or '')
+            ws.write(row, 7, 'Target Moves:', sub_h)
+            ws.write(row, 8, 'All Posted Entries' if self.target_move == 'posted' else 'All Entries')
+            row += 2
+            ws.write(row, 0, 'Sorted By:', sub_h)
+            ws.write(row, 1, 'Date' if self.sortby == 'sort_date' else 'Journal & Partner')
+            ws.write(row, 7, 'Date from :', sub_h)
+            ws.write(row, 8, fields.Date.to_string(self.date_from) if self.date_from else '')
+            row += 1
+            ws.write(row, 7, 'Date to :', sub_h)
+            ws.write(row, 8, fields.Date.to_string(self.date_to) if self.date_to else '')
+            row += 2
+
+            ws.write_row(row, 0, ['Code', 'Account', 'Date', 'JRNL', 'Partner', 'Ref', 'Label', 'Debit', 'Credit', 'Balance'], h)
+            row += 1
+            for acc in values.get('Accounts', []):
+                for line in acc.get('move_lines', []):
+                    ws.write(row, 0, acc.get('code', ''), b)
+                    ws.write(row, 1, acc.get('name', ''), b)
+                    ws.write(row, 2, fields.Date.to_string(line.get('ldate')) if line.get('ldate') else '', b)
+                    ws.write(row, 3, line.get('lcode', ''), b)
+                    ws.write(row, 4, line.get('partner_name', ''), b)
+                    ws.write(row, 5, line.get('lref', ''), b)
+                    ws.write(row, 6, line.get('lname', ''), b)
+                    ws.write_number(row, 7, float(line.get('debit') or 0.0), m)
+                    ws.write_number(row, 8, float(line.get('credit') or 0.0), m)
+                    ws.write_number(row, 9, float(line.get('balance') or 0.0), m)
+                    row += 1
+
+            ws.set_column('A:B', 22)
+            ws.set_column('C:G', 18)
+            ws.set_column('H:J', 14)
+
+        return self.env['excel.report.mixin']._create_excel_attachment('General Ledger.xlsx', build)
+
+    def action_print_excel(self):
+        return self.action_print_excel_kit()
 
     def action_print_excel(self):
         return self.action_print_excel_kit()
