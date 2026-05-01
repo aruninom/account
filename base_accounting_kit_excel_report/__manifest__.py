@@ -1,6 +1,6 @@
 {
     'name': 'Base Accounting Kit - Financial Report Excel',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.1',
     'summary': 'Adds Excel export buttons on accounting report wizards',
     'category': 'Accounting',
     'depends': ['base_accounting_kit'],
