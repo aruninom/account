@@ -107,7 +107,10 @@ class AccountGeneralLedgerExcel(models.TransientModel):
 
     def action_print_excel_kit(self):
         self.ensure_one()
-        data = {'form': self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'display_account', 'sortby', 'initial_balance'])[0]}
+        fields_to_read = ['date_from', 'date_to', 'journal_ids', 'target_move', 'display_account', 'sortby', 'initial_balance']
+        if 'account_ids' in self._fields:
+            fields_to_read.append('account_ids')
+        data = {'form': self.read(fields_to_read)[0]}
         data['form']['used_context'] = dict(self._build_contexts(data), lang=self.env.context.get('lang') or 'en_US')
         values = self.env['report.base_accounting_kit.report_general_ledger'].with_context(
             active_model=self._name,
