@@ -22,7 +22,6 @@
         </field>
     </record>
 
-
     <record id="bank_book_view_form_excel_inherit" model="ir.ui.view">
         <field name="name">bank.book.view.form.excel.inherit</field>
         <field name="model">account.bank.book.report</field>
@@ -78,8 +77,6 @@
         </field>
     </record>
 
-
-
     <record id="aged_partner_balance_view_form_excel_inherit" model="ir.ui.view">
         <field name="name">aged.partner.balance.view.form.excel.inherit</field>
         <field name="model">account.aged.trial.balance</field>
@@ -101,5 +98,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>
