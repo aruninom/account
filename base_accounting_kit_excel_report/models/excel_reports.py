@@ -445,3 +445,11 @@ class AccountTrialBalanceExcel(models.TransientModel):
                 row += 1
 
         return self.env['excel.report.mixin']._create_excel_attachment('Trial Balance.xlsx', build)
+
+
+class AccountGeneralLedgerExcelSafe(models.TransientModel):
+    _inherit = 'account.report.general.ledger'
+
+    def action_print_excel(self):
+        """Safety override: always route button to the kit method."""
+        return self.action_print_excel_kit()
