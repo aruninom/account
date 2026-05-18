@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_oehealth_patient_user,oehealth.patient.user,model_oehealth_patient,oehealth_core.group_oehealth_user,1,1,1,0
+access_oehealth_patient_manager,oehealth.patient.manager,model_oehealth_patient,oehealth_core.group_oehealth_manager,1,1,1,1
+access_oehealth_family_group_manager,oehealth.family.group.manager,model_oehealth_family_group,oehealth_core.group_oehealth_manager,1,1,1,1
+access_oehealth_vaccination_user,oehealth.vaccination.user,model_oehealth_vaccination,oehealth_core.group_oehealth_user,1,1,1,0
+access_oehealth_appointment_user,oehealth.appointment.user,model_oehealth_appointment,oehealth_core.group_oehealth_user,1,1,1,0
+access_oehealth_clinical_record_user,oehealth.clinical.record.user,model_oehealth_clinical_record,oehealth_core.group_oehealth_user,1,1,1,0
+access_oehealth_operation_user,oehealth.operation.user,model_oehealth_operation,oehealth_core.group_oehealth_user,1,1,1,0
+access_oehealth_bed_user,oehealth.bed.user,model_oehealth_bed,oehealth_core.group_oehealth_user,1,1,1,0
+access_oehealth_admission_user,oehealth.admission.user,model_oehealth_admission,oehealth_core.group_oehealth_user,1,1,1,0
+access_oehealth_billing_user,oehealth.billing.user,model_oehealth_billing,oehealth_core.group_oehealth_user,1,1,1,0
+access_oehealth_kpi_manager,oehealth.kpi.manager,model_oehealth_kpi,oehealth_core.group_oehealth_manager,1,1,1,1

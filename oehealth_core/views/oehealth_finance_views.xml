@@ -1,0 +1,1 @@
+<odoo><record id="action_oehealth_billing" model="ir.actions.act_window"><field name="name">Billing & Claims</field><field name="res_model">oehealth.billing</field><field name="view_mode">tree,form</field></record><menuitem id="menu_oehealth_billing_records" name="Billing & Insurance" parent="menu_oehealth_finance" action="action_oehealth_billing"/></odoo>

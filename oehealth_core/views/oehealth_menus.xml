@@ -1,0 +1,9 @@
+<odoo>
+    <menuitem id="menu_oehealth_root" name="OEHealth Core" sequence="10"/>
+    <menuitem id="menu_oehealth_patient" name="Patient Management" parent="menu_oehealth_root" sequence="10"/>
+    <menuitem id="menu_oehealth_appointments" name="Appointments" parent="menu_oehealth_root" sequence="20"/>
+    <menuitem id="menu_oehealth_clinical" name="Clinical" parent="menu_oehealth_root" sequence="30"/>
+    <menuitem id="menu_oehealth_operations" name="Hospital Operations" parent="menu_oehealth_root" sequence="40"/>
+    <menuitem id="menu_oehealth_finance" name="Finance & Insurance" parent="menu_oehealth_root" sequence="50"/>
+    <menuitem id="menu_oehealth_dashboard" name="Dashboard & KPIs" parent="menu_oehealth_root" sequence="60"/>
+</odoo>

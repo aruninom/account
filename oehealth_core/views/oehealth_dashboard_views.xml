@@ -1,0 +1,1 @@
+<odoo><record id="action_oehealth_kpi" model="ir.actions.act_window"><field name="name">Healthcare KPIs</field><field name="res_model">oehealth.kpi</field><field name="view_mode">tree,form,pivot,graph</field></record><menuitem id="menu_oehealth_kpi" name="KPIs" parent="menu_oehealth_dashboard" action="action_oehealth_kpi"/></odoo>
