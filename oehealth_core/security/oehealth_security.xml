@@ -1,0 +1,11 @@
+<odoo>
+    <record id="group_oehealth_user" model="res.groups">
+        <field name="name">OEHealth User</field>
+        <field name="category_id" ref="base.module_category_services_management"/>
+    </record>
+    <record id="group_oehealth_manager" model="res.groups">
+        <field name="name">OEHealth Manager</field>
+        <field name="category_id" ref="base.module_category_services_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_oehealth_user'))]"/>
+    </record>
+</odoo>

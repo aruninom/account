@@ -1,0 +1,8 @@
+<odoo>
+    <record id="seq_oehealth_patient" model="ir.sequence">
+        <field name="name">Patient</field>
+        <field name="code">oehealth.patient</field>
+        <field name="prefix">PAT%(y)s</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>
